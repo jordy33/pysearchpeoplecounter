@@ -124,7 +124,7 @@ sudo apt-get install python-matplotlib
 
 ```
 python3 people_counter.py --prototxt mobilenet_ssd/MobileNetSSD_deploy.prototxt --model mobilenet_ssd/MobileNetSSD_deploy.caffemodel --input 'nvarguscamerasrc ! video/x-raw(memory:NVMM), width=1280, height=720, framerate=21/1, format=NV12 ! nvvidconv flip-method=2 ! video/x-raw, width=960, height=616 format=BGRx ! videoconvert ! appsink'
-
+```
 
 ### Install Jupyter Lab
 ```
@@ -139,7 +139,7 @@ jupyter lab --generate-config
 jupyter notebook --ip='0.0.0.0' --no-browser --log-level=0 --notebook-dir=/home/jetson
 ```
 
-### 
+### Create File
 ```
 sudo vim /etc/systemd/system/jupyter.service
 ```
@@ -161,6 +161,7 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 ```
+
 ### Install
 ```
 sudo systemctl enable jupyter.service
