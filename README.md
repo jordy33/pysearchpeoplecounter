@@ -123,4 +123,47 @@ sudo apt-get install python-matplotlib
 
 
 ```
-python people_counter.py --prototxt mobilenet_ssd/MobileNetSSD_deploy.prototxt --model mobilenet_ssd/MobileNetSSD_deploy.caffemodel --input 'nvarguscamerasrc ! video/x-raw(memory:NVMM), width=1280, height=720, framerate=21/1, format=NV12 ! nvvidconv flip-method=2 ! video/x-raw, width=960, height=616 format=BGRx ! videoconvert ! appsink'
+python3 people_counter.py --prototxt mobilenet_ssd/MobileNetSSD_deploy.prototxt --model mobilenet_ssd/MobileNetSSD_deploy.caffemodel --input 'nvarguscamerasrc ! video/x-raw(memory:NVMM), width=1280, height=720, framerate=21/1, format=NV12 ! nvvidconv flip-method=2 ! video/x-raw, width=960, height=616 format=BGRx ! videoconvert ! appsink'
+
+
+### Install Jupyter Lab
+```
+sudo apt install nodejs npm
+sudo pip3 install jupyter jupyterlab
+sudo jupyter labextension install @jupyter-widgets/jupyterlab-manager
+jupyter lab --generate-config
+```
+
+### To test run
+```
+jupyter notebook --ip='0.0.0.0' --no-browser --log-level=0 --notebook-dir=/home/jetson
+```
+
+### 
+```
+sudo vim /etc/systemd/system/jupyter.service
+```
+### insert
+```
+[Unit]
+Description=Jupyter Workplace
+
+[Service]
+Type=simple
+PIDFile=/run/jupyter.pid
+ExecStart=/usr/local/bin/jupyter notebook --ip='0.0.0.0' --no-browser --log-level=0 --notebook-dir=/home/jetson
+User=jetson
+Group=jetson
+WorkingDirectory=/home/jetson
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+```
+### Install
+```
+sudo systemctl enable jupyter.service
+sudo systemctl daemon-reload
+sudo systemctl restart jupyter.service
+```
