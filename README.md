@@ -1,15 +1,20 @@
 ### People Counter
 
-# Install jetcard
+# Install Jetson Nano Developer Kitl SDK4.1
 ```
-https://github.com/NVIDIA-AI-IOT/jetcard
+https://developer.nvidia.com/embedded/jetpack
 ```
+
+Configure using :
+
 User: jetson Password: jetson
 
-
 # Install jetcam
-
-https://github.com/NVIDIA-AI-IOT/jetcam
+```
+git clone https://github.com/NVIDIA-AI-IOT/jetcam
+cd jetcam
+sudo python3 setup.py install
+```
 
 # install the basics
 
@@ -32,61 +37,7 @@ edit installSwapfile.sh --> change swapfile from 6gbto 4g
 
 
 
-from jetcam.csi_camera import CSICamera
-import ipywidgets
-from IPython.display import display
-from jetcam.utils import bgr8_to_jpeg
-
-#
-camera = CSICamera(width=224, height=224)
-image = camera.read()
-#
-image_widget = ipywidgets.Image(format='jpeg')
-
-image_widget.value = bgr8_to_jpeg(image)
-
-display(image_widget)
-
-camera.running = True
-
-def update_image(change):
-    image = change['new']
-    image_widget.value = bgr8_to_jpeg(image)
-    
-camera.observe(update_image, names='value')
-
-#To stop it, unattach the callback with the unobserve method.
-
-camera.unobserve(update_image, names='value')
-
-
-#Another way to view the image stream
-import traitlets
-
-camera_link = traitlets.dlink((camera, 'value'), (image_widget, 'value'), transform=bgr8_to_jpeg)
-
-#You can remove the camera/widget link with the unlink method.
-
-camera_link.unlink()
-
-#... and reconnect it again with link.
-
-camera_link.link()
-
-
-#Shut down the kernel of this notebook to release the camera resource.
-
-#To do so, shut down the notebook's kernel from the JupyterLab pull-down menu: Kernel->Shutdown Kernel, then restart it with Kernel->Restart Kernel.
-
-
-If the camera setup appears "stuck" or the images "frozen", follow these steps:
-
-Shut down the notebook kernel as explained above
-Open a terminal on the Jetson Nano by clicking the "Terminal" icon on the "Launch" page
-Enter the following command in the terminal window: sudo systemctl restart nvargus-daemon with password:dlinano
-
-
-# People Counter
+# Install Environment
 
 # install opencv 3.4.0
 ```
@@ -118,9 +69,7 @@ sudo apt-get install python-matplotlib
 ./gpuGraph.py
 ```
 
-### People counter
-
-
+### Execute People counter
 
 ```
 python3 people_counter.py --prototxt mobilenet_ssd/MobileNetSSD_deploy.prototxt --model mobilenet_ssd/MobileNetSSD_deploy.caffemodel --input 'nvarguscamerasrc ! video/x-raw(memory:NVMM), width=1280, height=720, framerate=21/1, format=NV12 ! nvvidconv flip-method=2 ! video/x-raw, width=960, height=616 format=BGRx ! videoconvert ! appsink'
@@ -167,4 +116,67 @@ WantedBy=multi-user.target
 sudo systemctl enable jupyter.service
 sudo systemctl daemon-reload
 sudo systemctl restart jupyter.service
+```
+
+# Open Jupiter lab
+
+```
+http://<ip>:8888
+```
+
+# Create a Notebook and insert the following code:
+
+```
+from jetcam.csi_camera import CSICamera
+import ipywidgets
+from IPython.display import display
+from jetcam.utils import bgr8_to_jpeg
+
+#
+camera = CSICamera(width=224, height=224)
+image = camera.read()
+#
+image_widget = ipywidgets.Image(format='jpeg')
+
+image_widget.value = bgr8_to_jpeg(image)
+
+display(image_widget)
+
+camera.running = True
+
+def update_image(change):
+    image = change['new']
+    image_widget.value = bgr8_to_jpeg(image)
+    
+camera.observe(update_image, names='value')
+
+#To stop it, unattach the callback with the unobserve method.
+
+camera.unobserve(update_image, names='value')
+
+
+#Another way to view the image stream
+import traitlets
+
+camera_link = traitlets.dlink((camera, 'value'), (image_widget, 'value'), transform=bgr8_to_jpeg)
+
+#You can remove the camera/widget link with the unlink method.
+
+camera_link.unlink()
+
+#... and reconnect it again with link.
+
+camera_link.link()
+
+
+#Shut down the kernel of this notebook to release the camera resource.
+
+#To do so, shut down the notebook's kernel from the JupyterLab pull-down menu: Kernel->Shutdown Kernel, then restart it with #Kernel->Restart Kernel.
+
+
+#If the camera setup appears "stuck" or the images "frozen", follow these steps:
+
+#Shut down the notebook kernel as explained above
+#Open a terminal on the Jetson Nano by clicking the "Terminal" icon on the "Launch" page
+#Enter the following command in the terminal window: sudo systemctl restart nvargus-daemon with password:dlinano
 ```
