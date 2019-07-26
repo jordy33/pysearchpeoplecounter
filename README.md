@@ -9,13 +9,6 @@ Configure using :
 
 User: jetson Password: jetson
 
-### Install jetcam
-```
-git clone https://github.com/NVIDIA-AI-IOT/jetcam
-cd jetcam
-sudo python3 setup.py install
-```
-
 ### install the basics
 
 ```
@@ -32,7 +25,7 @@ cd ~/project
 git clone https://github.com/JetsonHacksNano/installSwapfile 
 cd installSwapfile
 edit installSwapfile.sh --> change swapfile from 6gbto 4g
-./ installSwapfile.sh
+./installSwapfile.sh
 ```
 
 ## Install Environment
@@ -67,7 +60,22 @@ sudo apt-get install python-matplotlib
 ./gpuGraph.py
 ```
 
+### Install jetcam
+```
+git clone https://github.com/NVIDIA-AI-IOT/jetcam
+cd jetcam
+sudo python3 setup.py install
+```
+
 ### Execute People counter
+
+```
+$ cd ${HOME}
+https://github.com/jordy33/peoplecounter.git
+cd peoplecounter
+```
+
+### Execute the code 
 
 ```
 python3 people_counter.py --prototxt mobilenet_ssd/MobileNetSSD_deploy.prototxt --model mobilenet_ssd/MobileNetSSD_deploy.caffemodel --input 'nvarguscamerasrc ! video/x-raw(memory:NVMM), width=1280, height=720, framerate=21/1, format=NV12 ! nvvidconv flip-method=2 ! video/x-raw, width=960, height=616 format=BGRx ! videoconvert ! appsink'
@@ -90,7 +98,7 @@ jupyter notebook --ip='0.0.0.0' --no-browser --log-level=0 --notebook-dir=/home/
 ```
 sudo vim /etc/systemd/system/jupyter.service
 ```
-### insert
+### And insert:
 ```
 [Unit]
 Description=Jupyter Workplace
