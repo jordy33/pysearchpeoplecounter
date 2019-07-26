@@ -478,3 +478,107 @@ else:
 # close any open windows
 cv2.destroyAllWindows()
 ```
+NEW PC
+```
+%pylab inline 
+from pyimagesearch.centroidtracker import CentroidTracker
+from pyimagesearch.trackableobject import TrackableObject
+from imutils.video import VideoStream
+from imutils.video import FPS
+import numpy as np
+import argparse
+import imutils
+import time
+import dlib
+import cv2
+```
+p2
+```
+from jetcam.csi_camera import CSICamera
+import ipywidgets
+from IPython.display import display
+from jetcam.utils import bgr8_to_jpeg
+```
+p3
+```
+args = {}
+args["prototxt"]="mobilenet_ssd/MobileNetSSD_deploy.prototxt"
+args["model"]="mobilenet_ssd/MobileNetSSD_deploy.caffemodel"
+args["input"]="'nvarguscamerasrc ! video/x-raw(memory:NVMM), width=1280, height=720, framerate=21/1, format=NV12 ! nvvidconv flip-method=2 ! video/x-raw, width=960, height=616 format=BGRx ! videoconvert ! appsink'"
+args["output"]=""
+args["confidence"]=0.4
+args["skip_frames"]=30
+```
+p4
+```
+camera = CSICamera(width=224, height=224)
+image = camera.read()
+```
+p5
+```
+def update_image(change):
+	image = change['new']
+	info = [
+		("Up", 0),
+		("Down", 0),
+		("Status", 0),
+	]
+	(H, W) = image.shape[:2]
+	# if we are supposed to be writing a video to disk, initialize
+	# the writer
+	# loop over the info tuples and draw them on our frame
+	for (i, (k, v)) in enumerate(info):
+		text = "{}: {}".format(k, v)
+		cv2.putText(image, text, (10, H - ((i * 20) + 20)),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
+	fourcc = cv2.VideoWriter_fourcc(*"MJPG")
+	writer = cv2.VideoWriter(args["output"], fourcc, 30,(W, H), True)
+	# check to see if we should write the frame to disk
+	if writer is not None:
+		writer.write(image)
+	image_widget.value = bgr8_to_jpeg(image)
+```
+p6
+```
+# initialize the list of class labels MobileNet SSD was trained to
+# detect
+CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
+	"bottle", "bus", "car", "cat", "chair", "cow", "diningtable",
+	"dog", "horse", "motorbike", "person", "pottedplant", "sheep",
+	"sofa", "train", "tvmonitor"]
+
+# load our serialized model from disk
+print("[INFO] loading model...")
+net = cv2.dnn.readNetFromCaffe(args["prototxt"], args["model"])
+# initialize the video writer (we'll instantiate later if need be)
+writer = None
+
+# initialize the frame dimensions (we'll set them as soon as we read
+# the first frame from the video)
+W = None
+H = None
+
+# instantiate our centroid tracker, then initialize a list to store
+# each of our dlib correlation trackers, followed by a dictionary to
+# map each unique object ID to a TrackableObject
+ct = CentroidTracker(maxDisappeared=40, maxDistance=50)
+trackers = []
+trackableObjects = {}
+
+# initialize the total number of frames processed thus far, along
+# with the total number of objects that have moved either up or down
+totalFrames = 0
+totalDown = 0
+totalUp = 0
+
+# start the frames per second throughput estimator
+fps = FPS().start()
+```
+p7
+```
+image_widget = ipywidgets.Image(format='jpeg')
+image_widget.value = bgr8_to_jpeg(image)
+display(image_widget)
+camera.running = True
+camera.observe(update_image, names='value')
+```
