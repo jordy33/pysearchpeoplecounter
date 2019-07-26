@@ -1,6 +1,6 @@
-### People Counter
+# People Counter
 
-# Install Jetson Nano Developer Kitl SDK4.1
+### Install Jetson Nano Developer Kitl SDK4.1
 ```
 https://developer.nvidia.com/embedded/jetpack
 ```
@@ -9,14 +9,14 @@ Configure using :
 
 User: jetson Password: jetson
 
-# Install jetcam
+### Install jetcam
 ```
 git clone https://github.com/NVIDIA-AI-IOT/jetcam
 cd jetcam
 sudo python3 setup.py install
 ```
 
-# install the basics
+### install the basics
 
 ```
 $ mkdir -p ${HOME}/project
@@ -25,7 +25,7 @@ $ git clone https://github.com/jkjung-avt/jetson_nano.git
 $ cd jetson_nano/
 $ ./install_basics.sh
 ```
-# install 4Gb swapfile
+### install 4Gb swapfile
 ```
 mkdir ~/project
 cd ~/project
@@ -35,11 +35,9 @@ edit installSwapfile.sh --> change swapfile from 6gbto 4g
 ./ installSwapfile.sh
 ```
 
+## Install Environment
 
-
-# Install Environment
-
-# install opencv 3.4.0
+### install opencv 3.4.0
 ```
 sudo nvpmodel -m 0
 sudo jetson_clocks
@@ -47,7 +45,7 @@ cd ${HOME}/project/jetson_nano
 ./install_opencv-3.4.6.sh
 ```
 
-# Install Dlib
+### Install Dlib
 ```
 sudo pip3 install dlib
 # Install imutils
@@ -57,7 +55,7 @@ sudo pip3 install imutils
 ```
 git clone https://github.com/jordy33/peoplecounter.git
 ```
-# Install scipy
+### Install scipy
 ```
 sudo pip3 install scipy
 
@@ -118,13 +116,13 @@ sudo systemctl daemon-reload
 sudo systemctl restart jupyter.service
 ```
 
-# Open Jupiter lab
+### Open Jupiter lab
 
 ```
 http://<ip>:8888
 ```
 
-# Create a Notebook and insert the following code:
+### Create a Notebook and insert the following code:
 
 ```
 from jetcam.csi_camera import CSICamera
