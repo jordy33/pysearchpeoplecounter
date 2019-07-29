@@ -1,14 +1,17 @@
 # People Counter
-
+### Detach raspberry pi camera
 ### Install Jetson Nano Developer Kitl SDK4.1
 ```
 https://developer.nvidia.com/embedded/jetpack
 ```
-
 Configure using :
 
 User: jetson Password: jetson
 
+### Test CSI Camera
+```
+https://github.com/JetsonHacksNano/CSI-Camera
+```
 ### install the basics
 
 ```
